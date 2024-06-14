@@ -14,12 +14,15 @@ export default function TimerChallenge({ title, targetTime }) {
   if (timerIsExpired) {
     clearInterval(timer.current);
     dialogRef.current.open();
+  }
+
+  function handleResetTime() {
     setTimeRemaining(targetTimeInMS);
   }
 
   function handleStart() {
+    //countdown
     timer.current = setInterval(() => {
-      //countdown
       setTimeRemaining((prevValue) => prevValue - intervalMS);
     }, intervalMS);
   }
@@ -27,7 +30,6 @@ export default function TimerChallenge({ title, targetTime }) {
   function handleStop() {
     clearInterval(timer.current);
     dialogRef.current.open();
-    setTimeRemaining(targetTimeInMS);
   }
 
   return (
@@ -35,14 +37,14 @@ export default function TimerChallenge({ title, targetTime }) {
       <ResultModal
         ref={dialogRef}
         targetTime={targetTime}
-        result="lost"
         timeLeft={timeRemaining}
+        onReset={handleResetTime}
       />
       <section className="challenge">
         <h2>{title}</h2>
         {timerIsExpired && <p>You lost</p>}
         <p className="challenge-time">
-          {targetTime} second{targetTime > 1 ? "s" : ""}
+          {targetTime} second{targetTime !== 1 && "s"}
         </p>
         <p>
           <button onClick={timerIsActive ? handleStop : handleStart}>
